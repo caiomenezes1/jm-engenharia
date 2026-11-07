@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JM Engenharia - Diário de Obras</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+    <main class="container py-5">
+
+        {% with mensagens = get_flashed_messages(with_categories=true) %}
+        {% for categoria, mensagem in mensagens %}
+        <div class="alert alert-{{ categoria }} alert-dismissible fade show">
+            {{ mensagem }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% endwith %}
+
+
+        <!-- Cabeçalho -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h1 class="h3 mb-1">JM Engenharia</h1>
+                <p class="text-muted mb-0">
+                    Sistema de Diário de Obras
+                </p>
+            </div>
+
+            <a href="{{ url_for('main.novo_diario') }}" class="btn btn-primary">
+                Novo Diário
+            </a>
+
+        </div>
+
+        <!-- Listagem de diários -->
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h2 class="h5 mb-3">
+                    Diários cadastrados
+                </h2>
+
+                {% if diarios %}
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Obra</th>
+                                <th>Data</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for diario in diarios %}
+
+                            <tr>
+                                <td>{{ diario.id }}</td>
+
+                                <td>
+                                    {{ diario.identificacao_obra }}
+                                </td>
+
+                                <td>
+                                    {{ diario.data_diario.strftime('%d/%m/%Y') }}
+                                </td>
+
+                                <td>
+                                    <div class="d-flex gap-2">
+
+                                        <a href="{{ url_for('main.detalhes_diario', id_diario=diario.id) }}"
+                                            class="btn btn-primary btn-sm">
+                                            Detalhes
+                                        </a>
+
+                                        <a href="{{ url_for('main.imprimir_diario', id_diario=diario.id) }}"
+                                            class="btn btn-success btn-sm">
+                                            Imprimir
+                                        </a>
+
+                                        <form method="POST"
+                                            action="{{ url_for('main.excluir_diario', id_diario=diario.id) }}"
+                                            onsubmit="return confirm('Deseja realmente excluir este diário?');">
+
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                Excluir
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                {% else %}
+
+                <p class="text-muted mb-0">
+                    Nenhum diário cadastrado até o momento.
+                </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

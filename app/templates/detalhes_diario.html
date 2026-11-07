@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -9,145 +8,262 @@
     <title>Detalhes do Diário - JM Engenharia</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --sidebar-bg: #0b192c;
+            --primary-blue: #0d6efd;
+            --card-header-bg: #eef2f6;
+        }
+        body {
+            background-color: #f8f9fa;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        }
+        /* Sidebar Estilo Protótipo */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.5rem 1rem;
+        }
+        .sidebar-brand {
+            text-align: center;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 2rem;
+        }
+        .sidebar-brand h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 0;
+        }
+        .sidebar-brand span {
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: #adb5bd;
+            text-transform: uppercase;
+        }
+        .nav-link-custom {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #adb5bd;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            margin-bottom: 5px;
+        }
+        .nav-link-custom:hover, .nav-link-custom.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .nav-link-custom.active {
+            background-color: var(--primary-blue);
+        }
+        /* Conteúdo Principal */
+        .main-content {
+            margin-left: 260px;
+            padding: 2rem;
+        }
+        @media (max-width: 992px) {
+            .sidebar { width: 70px; padding: 1.5rem 0.5rem; }
+            .sidebar-brand span, .nav-link-custom span, .sidebar-footer span { display: none; }
+            .main-content { margin-left: 70px; }
+        }
+        /* Estilização dos Cards idêntica às outras telas */
+        .card-custom {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+        }
+        .card-custom .card-header-custom {
+            background-color: var(--card-header-bg);
+            padding: 0.75rem 1.25rem;
+            font-weight: 600;
+            color: #0b192c;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
 </head>
 
-<body class="bg-light">
+<body>
 
-    <main class="container py-5">
-
-        <!-- Cabeçalho -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-
-            <div>
-                <h1 class="h3 mb-1">JM Engenharia</h1>
-                <p class="text-muted mb-0">Detalhes do Diário de Obras</p>
-            </div>
-
-            <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">
-                Voltar
+    <!-- Sidebar / Menu Lateral -->
+    <aside class="sidebar">
+        <div>
+            <a href="#" class="sidebar-brand d-block">
+                <h2>JM</h2>
+                <span>ENGENHARIA</span>
             </a>
+            <nav>
+                <a href="{{ url_for('main.index') }}" class="nav-link-custom">
+                    <i class="bi bi-house-door fs-5"></i>
+                    <span>Início</span>
+                </a>
+                <a href="{{ url_for('main.index') }}" class="nav-link-custom active">
+                    <i class="bi bi-journal-text fs-5"></i>
+                    <span>Meus Diários</span>
+                </a>
+                <a href="#" class="nav-link-custom">
+                    <i class="bi bi-gear fs-5"></i>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+        </div>
+        <div class="sidebar-footer border-top border-secondary pt-3">
+            <a href="#" class="nav-link-custom text-muted">
+                <i class="bi bi-info-circle fs-5"></i>
+                <span>Sobre o Sistema</span>
+            </a>
+        </div>
+    </aside>
 
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+
+        <!-- Topo / Cabeçalho da Página -->
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+            <div>
+                <h1 class="h4 mb-0 fw-bold">Diários de Obras <span class="text-muted fw-normal fs-6">| JM Engenharia</span></h1>
+            </div>
+            <div class="text-primary fs-4">
+                <i class="bi bi-buildings-fill"></i>
+            </div>
+        </div>
+
+        <!-- Cabeçalho de Ações e Título -->
+        <div class="mb-4">
+            <a href="{{ url_for('main.index') }}" class="btn btn-outline-primary btn-sm mb-3">
+                <i class="bi bi-arrow-left"></i> Voltar para a lista
+            </a>
+            <h2 class="h3 fw-bold text-dark">Detalhes do Diário de Obras</h2>
+            <p class="text-muted">Consulta completa das informações registradas para este diário.</p>
         </div>
 
         <!-- Dados da obra -->
-        <div class="card shadow-sm mb-4">
-
-            <div class="card-body">
-
-                <h2 class="h5 mb-3">Dados da obra</h2>
-
-                <p class="mb-2">
-                    <strong>Identificação:</strong>
-                    {{ diario.identificacao_obra }}
-                </p>
-
-                <p class="mb-0">
-                    <strong>Data:</strong>
-                    {{ diario.data_diario.strftime('%d/%m/%Y') }}
-                </p>
-
+        <div class="card-custom shadow-sm mb-4">
+            <div class="card-header-custom">
+                <i class="bi bi-building"></i> Dados da Obra
             </div>
-
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <span class="text-muted d-block small mb-1">Identificação da Obra</span>
+                        <strong class="fs-5 text-dark">{{ diario.identificacao_obra }}</strong>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="text-muted d-block small mb-1">Data do Diário</span>
+                        <strong class="fs-5 text-dark">{{ diario.data_diario.strftime('%d/%m/%Y') }}</strong>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Profissionais -->
-        <div class="card shadow-sm mb-4">
-
-            <div class="card-body">
-
-                <h2 class="h5 mb-3">Profissionais</h2>
-
-                {% if diario.profissionais %}
-
-                <table class="table table-hover align-middle mb-0">
-
-                    <thead>
-                        <tr>
-                            <th>Função</th>
-                            <th>Quantidade</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {% for profissional in diario.profissionais %}
-                        <tr>
-                            <td>{{ profissional.funcao.nome_funcao }}</td>
-                            <td>{{ profissional.quantidade }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-
-                </table>
-
-                {% else %}
-
-                <p class="text-muted mb-0">Nenhum profissional informado.</p>
-
-                {% endif %}
-
+        <div class="card-custom shadow-sm mb-4">
+            <div class="card-header-custom">
+                <i class="bi bi-people-fill"></i> Profissionais
             </div>
-
+            <div class="card-body p-4">
+                {% if diario.profissionais %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 border">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="py-3">Função</th>
+                                <th class="py-3" style="width: 200px;">Quantidade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for profissional in diario.profissionais %}
+                            <tr>
+                                <td class="fw-medium">{{ profissional.funcao.nome_funcao }}</td>
+                                <td>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">
+                                        {{ profissional.quantidade }} profissional(is)
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-info-circle fs-4 mb-2 d-block"></i>
+                    Nenhum profissional informado.
+                </div>
+                {% endif %}
+            </div>
         </div>
 
         <!-- Atividades -->
-        <div class="card shadow-sm mb-4">
-
-            <div class="card-body">
-
-                <h2 class="h5 mb-3">Atividades realizadas</h2>
-
-                {% if diario.atividades %}
-
-                <table class="table table-hover align-middle mb-0">
-
-                    <thead>
-                        <tr>
-                            <th>Grupo</th>
-                            <th>Atividade</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {% for item in diario.atividades %}
-                        <tr>
-                            <td>{{ item.atividade.grupo.nome_grupo }}</td>
-                            <td>{{ item.atividade.descricao_atividade }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-
-                </table>
-
-                {% else %}
-
-                <p class="text-muted mb-0">Nenhuma atividade informada.</p>
-
-                {% endif %}
-
+        <div class="card-custom shadow-sm mb-4">
+            <div class="card-header-custom">
+                <i class="bi bi-wrench-adjustable"></i> Atividades Realizadas
             </div>
-
+            <div class="card-body p-4">
+                {% if diario.atividades %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 border">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="py-3" style="width: 35%;">Grupo</th>
+                                <th class="py-3">Atividade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in diario.atividades %}
+                            <tr>
+                                <td>
+                                    <span class="fw-semibold text-secondary">
+                                        <i class="bi bi-folder2 me-1"></i> {{ item.atividade.grupo.nome_grupo }}
+                                    </span>
+                                </td>
+                                <td class="fw-medium text-dark">{{ item.atividade.descricao_atividade }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-info-circle fs-4 mb-2 d-block"></i>
+                    Nenhuma atividade informada.
+                </div>
+                {% endif %}
+            </div>
         </div>
 
         <!-- Observações gerais -->
         {% if diario.observacoes_gerais %}
-
-        <div class="card shadow-sm mb-4">
-
-            <div class="card-body">
-
-                <h2 class="h5 mb-3">Observações gerais</h2>
-
-                <p class="mb-0">{{ diario.observacoes_gerais }}</p>
-
+        <div class="card-custom shadow-sm mb-4">
+            <div class="card-header-custom">
+                <i class="bi bi-card-text"></i> Observações Gerais
             </div>
-
+            <div class="card-body p-4">
+                <p class="mb-0 text-secondary bg-light p-3 rounded border">{{ diario.observacoes_gerais }}</p>
+            </div>
         </div>
-
         {% endif %}
 
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
-```

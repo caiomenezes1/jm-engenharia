@@ -1,0 +1,153 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Detalhes do Diário - JM Engenharia</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+    <main class="container py-5">
+
+        <!-- Cabeçalho -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h1 class="h3 mb-1">JM Engenharia</h1>
+                <p class="text-muted mb-0">Detalhes do Diário de Obras</p>
+            </div>
+
+            <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">
+                Voltar
+            </a>
+
+        </div>
+
+        <!-- Dados da obra -->
+        <div class="card shadow-sm mb-4">
+
+            <div class="card-body">
+
+                <h2 class="h5 mb-3">Dados da obra</h2>
+
+                <p class="mb-2">
+                    <strong>Identificação:</strong>
+                    {{ diario.identificacao_obra }}
+                </p>
+
+                <p class="mb-0">
+                    <strong>Data:</strong>
+                    {{ diario.data_diario.strftime('%d/%m/%Y') }}
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- Profissionais -->
+        <div class="card shadow-sm mb-4">
+
+            <div class="card-body">
+
+                <h2 class="h5 mb-3">Profissionais</h2>
+
+                {% if diario.profissionais %}
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead>
+                        <tr>
+                            <th>Função</th>
+                            <th>Quantidade</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for profissional in diario.profissionais %}
+                        <tr>
+                            <td>{{ profissional.funcao.nome_funcao }}</td>
+                            <td>{{ profissional.quantidade }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+
+                {% else %}
+
+                <p class="text-muted mb-0">Nenhum profissional informado.</p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- Atividades -->
+        <div class="card shadow-sm mb-4">
+
+            <div class="card-body">
+
+                <h2 class="h5 mb-3">Atividades realizadas</h2>
+
+                {% if diario.atividades %}
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead>
+                        <tr>
+                            <th>Grupo</th>
+                            <th>Atividade</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in diario.atividades %}
+                        <tr>
+                            <td>{{ item.atividade.grupo.nome_grupo }}</td>
+                            <td>{{ item.atividade.descricao_atividade }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+
+                {% else %}
+
+                <p class="text-muted mb-0">Nenhuma atividade informada.</p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- Observações gerais -->
+        {% if diario.observacoes_gerais %}
+
+        <div class="card shadow-sm mb-4">
+
+            <div class="card-body">
+
+                <h2 class="h5 mb-3">Observações gerais</h2>
+
+                <p class="mb-0">{{ diario.observacoes_gerais }}</p>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </main>
+
+</body>
+
+</html>
+```
