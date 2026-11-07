@@ -60,6 +60,7 @@
                                 <th>ID</th>
                                 <th>Obra</th>
                                 <th>Data</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
 
@@ -76,6 +77,32 @@
 
                                 <td>
                                     {{ diario.data_diario.strftime('%d/%m/%Y') }}
+                                </td>
+
+                                <td>
+                                    <div class="d-flex gap-2">
+
+                                        <a href="{{ url_for('main.detalhes_diario', id_diario=diario.id) }}"
+                                            class="btn btn-primary btn-sm">
+                                            Detalhes
+                                        </a>
+
+                                        <a href="{{ url_for('main.imprimir_diario', id_diario=diario.id) }}"
+                                            class="btn btn-success btn-sm">
+                                            Imprimir
+                                        </a>
+
+                                        <form method="POST"
+                                            action="{{ url_for('main.excluir_diario', id_diario=diario.id) }}"
+                                            onsubmit="return confirm('Deseja realmente excluir este diário?');">
+
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                Excluir
+                                            </button>
+
+                                        </form>
+
+                                    </div>
                                 </td>
                             </tr>
 

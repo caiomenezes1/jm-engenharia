@@ -1,4 +1,10 @@
 
+from io import BytesIO
+
+from docx import Document
+from docx.shared import Cm, Pt
+from flask import send_file
+
 from datetime import date
 
 from flask import (
@@ -9,7 +15,7 @@ from flask import (
     request,
     url_for,
 )
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.orm import selectinload
 
 from app.database import SessionLocal
@@ -194,3 +200,159 @@ def novo_diario():
             erros=[],
             atividades_selecionadas=[]
         )
+
+
+
+@bp.route("/diarios/<int:id_diario>/excluir", methods=["POST"])
+def excluir_diario(id_diario):
+    with SessionLocal() as session:
+        try:
+            diario = session.get(DiarioObra, id_diario)
+
+            if diario is None:
+                flash("Diário não encontrado.", "warning")
+                return redirect(url_for("main.index"))
+
+            session.execute(
+                delete(DiarioProfissional).where(
+                    DiarioProfissional.id_diario == id_diario
+                )
+            )
+
+            session.execute(
+                delete(DiarioAtividade).where(
+                    DiarioAtividade.id_diario == id_diario
+                )
+            )
+
+            session.delete(diario)
+            session.commit()
+
+            flash("Diário excluído com sucesso!", "success")
+
+        except Exception:
+            session.rollback()
+            flash("Não foi possível excluir o diário.", "danger")
+
+    return redirect(url_for("main.index"))
+
+
+@bp.route("/diarios/<int:id_diario>")
+def detalhes_diario(id_diario):
+    with SessionLocal() as session:
+        diario = session.scalar(
+            select(DiarioObra)
+            .where(DiarioObra.id == id_diario)
+            .options(
+                selectinload(DiarioObra.profissionais)
+                .selectinload(DiarioProfissional.funcao),
+
+                selectinload(DiarioObra.atividades)
+                .selectinload(DiarioAtividade.atividade)
+                .selectinload(Atividade.grupo)
+            )
+        )
+
+        if diario is None:
+            flash("Diário não encontrado.", "warning")
+            return redirect(url_for("main.index"))
+
+        return render_template(
+            "detalhes_diario.html",
+            diario=diario
+        )
+
+
+@bp.route("/diarios/<int:id_diario>/imprimir")
+def imprimir_diario(id_diario):
+    with SessionLocal() as session:
+        diario = session.scalar(
+            select(DiarioObra)
+            .where(DiarioObra.id == id_diario)
+            .options(
+                selectinload(DiarioObra.profissionais)
+                .selectinload(DiarioProfissional.funcao),
+
+                selectinload(DiarioObra.atividades)
+                .selectinload(DiarioAtividade.atividade)
+                .selectinload(Atividade.grupo)
+            )
+        )
+
+        if diario is None:
+            flash("Diário não encontrado.", "warning")
+            return redirect(url_for("main.index"))
+
+        documento = Document()
+
+        # Configuração da página
+        secao = documento.sections[0]
+        secao.top_margin = Cm(2)
+        secao.bottom_margin = Cm(2)
+        secao.left_margin = Cm(2)
+        secao.right_margin = Cm(2)
+
+        # Título
+        titulo = documento.add_heading("JM ENGENHARIA", level=0)
+        titulo.alignment = 1
+
+        subtitulo = documento.add_paragraph("DIÁRIO DE OBRAS")
+        subtitulo.alignment = 1
+
+        # Dados da obra
+        documento.add_heading("Dados da obra", level=1)
+
+        documento.add_paragraph(
+            f"Identificação: {diario.identificacao_obra}"
+        )
+
+        documento.add_paragraph(
+            f"Data: {diario.data_diario.strftime('%d/%m/%Y')}"
+        )
+
+        # Profissionais
+        documento.add_heading("Profissionais", level=1)
+
+        tabela = documento.add_table(rows=1, cols=2)
+        tabela.style = "Table Grid"
+
+        tabela.rows[0].cells[0].text = "Função"
+        tabela.rows[0].cells[1].text = "Quantidade"
+
+        for profissional in diario.profissionais:
+            celulas = tabela.add_row().cells
+            celulas[0].text = profissional.funcao.nome_funcao
+            celulas[1].text = str(profissional.quantidade)
+
+        # Atividades
+        documento.add_heading("Atividades realizadas", level=1)
+
+        tabela = documento.add_table(rows=1, cols=2)
+        tabela.style = "Table Grid"
+
+        tabela.rows[0].cells[0].text = "Grupo"
+        tabela.rows[0].cells[1].text = "Atividade"
+
+        for item in diario.atividades:
+            celulas = tabela.add_row().cells
+            celulas[0].text = item.atividade.grupo.nome_grupo
+            celulas[1].text = item.atividade.descricao_atividade
+
+        # Observações gerais
+        if diario.observacoes_gerais:
+            documento.add_heading("Observações gerais", level=1)
+            documento.add_paragraph(diario.observacoes_gerais)
+
+        # Geração do arquivo em memória
+        arquivo = BytesIO()
+        documento.save(arquivo)
+        arquivo.seek(0)
+
+        nome_arquivo = f"diario_obra_{diario.id}.docx"
+
+        return send_file(
+            arquivo,
+            as_attachment=True,
+            download_name=nome_arquivo,
+            mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )    
