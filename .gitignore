@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Ambiente virtual
+venv/
+.venv/
+env/
+
+# Configurações e credenciais
+.env
+.env.*
+!.env.example
+config.local.py
+
+# Arquivos temporários
+*.log
+.DS_Store
+Thumbs.db
