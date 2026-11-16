@@ -12,10 +12,12 @@
             --sidebar-bg: #0b192c;
             --primary-blue: #0d6efd;
         }
+
         body {
             background-color: #f8f9fa;
             font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
         }
+
         /* Sidebar Estilo Protótipo */
         .sidebar {
             width: 260px;
@@ -30,24 +32,28 @@
             justify-content: space-between;
             padding: 1.5rem 1rem;
         }
+
         .sidebar-brand {
             text-align: center;
             color: white;
             text-decoration: none;
             margin-bottom: 2rem;
         }
+
         .sidebar-brand h2 {
             font-size: 1.5rem;
             font-weight: bold;
             letter-spacing: 1px;
             margin-bottom: 0;
         }
+
         .sidebar-brand span {
             font-size: 0.75rem;
             letter-spacing: 2px;
             color: #adb5bd;
             text-transform: uppercase;
         }
+
         .nav-link-custom {
             display: flex;
             align-items: center;
@@ -59,29 +65,46 @@
             transition: all 0.2s;
             margin-bottom: 5px;
         }
-        .nav-link-custom:hover, .nav-link-custom.active {
+
+        .nav-link-custom:hover,
+        .nav-link-custom.active {
             color: white;
             background-color: rgba(255, 255, 255, 0.1);
         }
+
         .nav-link-custom.active {
             background-color: var(--primary-blue);
         }
+
         /* Conteúdo Principal */
         .main-content {
             margin-left: 260px;
             padding: 2rem;
         }
+
         @media (max-width: 992px) {
-            .sidebar { width: 70px; padding: 1.5rem 0.5rem; }
-            .sidebar-brand span, .nav-link-custom span, .sidebar-footer span { display: none; }
-            .main-content { margin-left: 70px; }
+            .sidebar {
+                width: 70px;
+                padding: 1.5rem 0.5rem;
+            }
+
+            .sidebar-brand span,
+            .nav-link-custom span,
+            .sidebar-footer span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
         }
+
         /* Banner Hero */
         .hero-banner {
             background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
             border-radius: 12px;
             overflow: hidden;
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
@@ -124,7 +147,8 @@
         <!-- Topo / Cabeçalho da Página -->
         <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
             <div>
-                <h1 class="h4 mb-0 fw-bold">Diários de Obras <span class="text-muted fw-normal fs-6">| JM Engenharia</span></h1>
+                <h1 class="h4 mb-0 fw-bold">Diários de Obras <span class="text-muted fw-normal fs-6">| JM
+                        Engenharia</span></h1>
             </div>
             <div class="text-primary fs-4">
                 <i class="bi bi-buildings-fill"></i>
@@ -199,14 +223,17 @@
                                         </a>
 
                                         <a href="{{ url_for('main.imprimir_diario', id_diario=diario.id) }}"
+                                            onclick="return confirm('Deseja realmente imprimir este diário?');"
                                             class="btn btn-outline-success btn-sm d-flex align-items-center gap-1">
                                             <i class="bi bi-printer"></i> Imprimir
                                         </a>
 
                                         <form method="POST"
                                             action="{{ url_for('main.excluir_diario', id_diario=diario.id) }}"
-                                            onsubmit="return confirm('Deseja realmente excluir este diário?');" class="d-inline">
-                                            <button type="submit" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1">
+                                            onsubmit="return confirm('Deseja realmente excluir este diário?');"
+                                            class="d-inline">
+                                            <button type="submit"
+                                                class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1">
                                                 <i class="bi bi-trash"></i> Excluir
                                             </button>
                                         </form>
