@@ -36,5 +36,5 @@ Aplicação planejada para execução local em computador, utilizando navegador 
 
 ## Status
 
-Em desenvolvimento.
+Desenvolvimento concluído. Publicação em produção em andamento.
 
